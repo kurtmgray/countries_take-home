@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@layer components {
+  .searchBar {
+    @apply mb-4 
+      flex 
+      justify-center;
+  }
+  .input {
+    @apply p-2 
+      border 
+      rounded-lg 
+      w-full 
+      max-w-md;
+  }
+}

@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@layer components {
+  .sortControls {
+    @apply flex 
+      flex-wrap 
+      justify-center 
+      gap-2 
+      mb-4;
+  }
+}

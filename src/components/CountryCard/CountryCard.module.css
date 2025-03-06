@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+@layer components {
+  .card {
+    @apply border 
+      p-4 
+      rounded-lg 
+      shadow;
+  }
+  .image {
+    @apply w-full 
+      h-32 
+      object-cover 
+      mb-4;
+  }
+  .name {
+    @apply text-xl 
+      font-bold;
+  }
+}
