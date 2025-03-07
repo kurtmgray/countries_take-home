@@ -1,4 +1,4 @@
-export type AppConfig = {
+export interface AppConfig {
   defaultRegion: Region;
   sorting: {
     initialSortBy: SortOption;
@@ -6,7 +6,7 @@ export type AppConfig = {
   };
 }
 
-export type ApiConfig = {
+export interface ApiConfig {
   subregion: {
     url: string;
     fields: string[];

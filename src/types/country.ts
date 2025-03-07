@@ -1,4 +1,4 @@
-export type Country = {
+export interface Country {
   name: string;
   population: number;
   capital?: string;
@@ -6,7 +6,7 @@ export type Country = {
   id: string; 
 };
 
-export type CountryApiResponse = {
+export interface CountryApiResponse {
   name: { common: string };
   population: number;
   capital?: string[];
@@ -14,7 +14,7 @@ export type CountryApiResponse = {
   cca3: string;
 };
 
-export type RegionsApiResponse = {
+export interface RegionsApiResponse {
   region: string;
   subregion: string;
 }
