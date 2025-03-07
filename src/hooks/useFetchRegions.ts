@@ -34,11 +34,12 @@ export function useFetchRegions() {
     return new Map();
   });
 
-  const [regionsLoading, setRegionsLoading] = useState<boolean>(true);
+  const [regionsLoading, setRegionsLoading] = useState<boolean>(false);
   const [regionsError, setRegionsError] = useState<string | null>(null);
 
     useEffect(() => {
       if (regions.size > 0) return;
+      setRegionsLoading(true);
       
       console.log("Regions not in cache, fetching fresh data");
 
@@ -71,6 +72,7 @@ export function useFetchRegions() {
           setRegions(regionsMap);
         } catch (err) {
           setRegionsError((err as Error).message);
+          clearTimeout(timeoutId);
         } finally {
           setRegionsLoading(false);
         }
