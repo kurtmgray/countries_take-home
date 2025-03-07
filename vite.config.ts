@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/kurtmgray/countries_take-home/",
+  base: "/countries_take-home/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
