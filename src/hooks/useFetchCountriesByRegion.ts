@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Country } from "@/types/country";
 import { mapCountries } from "@/lib/mappingUtils";
 import { appConfig } from "@/config/appConfig";
+import { testConfig } from "@/config/testConfig";
 
 /**
  * Hook to fetch countries based on a selected (sub) region.
@@ -33,6 +34,8 @@ export function useFetchCountriesByRegion(region: string) {
 
     async function fetchCountries() {
       try {
+        if (testConfig.countryError) throw new Error("Test error");
+        
         const response = await fetch(`${appConfig.subregionUrl}${region}`, {
           signal: controller.signal,
         });

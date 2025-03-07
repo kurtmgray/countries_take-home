@@ -22,7 +22,9 @@ type ErrorAlertProps = {
 export function ErrorAlert({ type, error }: ErrorAlertProps) {
   return (
     <Alert variant="destructive" className={styles.error}>
-      <AlertTitle>{type} error:</AlertTitle>
+      <AlertTitle>
+        {`>_`} {type} error:
+      </AlertTitle>
       <AlertDescription>{error}</AlertDescription>
     </Alert>
   );

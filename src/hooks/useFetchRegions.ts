@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { appConfig } from "@/config/appConfig";
 import { buildRegionMap } from "@/lib/mappingUtils";
+import { testConfig } from "@/config/testConfig";
 
 const CACHE_KEY = "regions_cache";
 const CACHE_EXPIRY_KEY = "regions_cache_expiry";
@@ -53,11 +54,14 @@ export function useFetchRegions() {
 
       async function fetchRegions() {
         try {
+          if (testConfig.regionError) throw new Error("Test error");
+          
           const response = await fetch(`${appConfig.allCountriesUrl}`, {
             signal: controller.signal,
           });
           
           clearTimeout(timeoutId);
+
 
           if (!response.ok) {
             throw new Error("Failed to fetch countries.");

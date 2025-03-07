@@ -37,18 +37,17 @@ export default function Home() {
   );
 
   const sortedCountries: Country[] = useMemo(() => {
-    if (!initialCountries.length) return [];
+    console.log('sorting');
+    return sortCountries(initialCountries, sortBy, sortOrder);
+  }, [initialCountries, sortBy, sortOrder]);
 
-    let updatedCountries = initialCountries;
-
-    if (searchQuery) {
-      updatedCountries = initialCountries.filter((country) =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    return sortCountries(updatedCountries, sortBy, sortOrder);
-  }, [initialCountries, sortBy, sortOrder, searchQuery]);
+  const filteredCountries: Country[] = useMemo(() => {
+    if (!searchQuery) return sortedCountries;
+    console.log('filtering');
+    return sortedCountries.filter((country) =>
+      country.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [sortedCountries, searchQuery]);
 
   const handleRegionChange = (newRegion: Region) => {
     setRegion(newRegion);
@@ -84,7 +83,7 @@ export default function Home() {
 
       {!countriesError && !regionsError && (
         <div className={styles.grid}>
-          {sortedCountries.map((country) => (
+          {filteredCountries.map((country) => (
             <CountryCard key={country.id} country={country} />
           ))}
         </div>
