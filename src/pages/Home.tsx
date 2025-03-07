@@ -37,13 +37,11 @@ export default function Home() {
   );
 
   const sortedCountries: Country[] = useMemo(() => {
-    console.log('sorting');
     return sortCountries(initialCountries, sortBy, sortOrder);
   }, [initialCountries, sortBy, sortOrder]);
 
   const filteredCountries: Country[] = useMemo(() => {
     if (!searchQuery) return sortedCountries;
-    console.log('filtering');
     return sortedCountries.filter((country) =>
       country.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
