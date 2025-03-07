@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { appConfig } from "@/config/appConfig";
+import { apiConfig } from "@/config/apiConfig";
 import { buildRegionMap } from "@/lib/mappingUtils";
 import { testConfig } from "@/config/testConfig";
+import { RegionsApiResponse } from "@/types/country";
 
 const CACHE_KEY = "regions_cache";
 const CACHE_EXPIRY_KEY = "regions_cache_expiry";
@@ -50,13 +51,13 @@ export function useFetchRegions() {
         controller.abort();
         setRegionsError("Fetch request aborted due to timeout.");
         setRegionsLoading(false);
-      }, appConfig.fetchTimeout);
+      }, apiConfig.fetchTimeout);
 
       async function fetchRegions() {
         try {
           if (testConfig.regionError) throw new Error("Test error");
           
-          const response = await fetch(`${appConfig.allCountriesUrl}`, {
+          const response = await fetch(`${apiConfig.all.url}?fields=${apiConfig.all.fields.join(',')}`, {
             signal: controller.signal,
           });
           
@@ -66,7 +67,7 @@ export function useFetchRegions() {
           if (!response.ok) {
             throw new Error("Failed to fetch countries.");
           }
-          const data = await response.json();
+          const data: RegionsApiResponse[] = await response.json();
 
           const regionsMap: Map<string,string[]> = buildRegionMap(data);
 

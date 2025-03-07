@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Country } from "@/types/country";
+import { Country, CountryApiResponse } from "@/types/country";
 import { mapCountries } from "@/lib/mappingUtils";
-import { appConfig } from "@/config/appConfig";
+import { apiConfig } from "@/config/apiConfig";
 import { testConfig } from "@/config/testConfig";
 
 /**
@@ -17,6 +17,7 @@ import { testConfig } from "@/config/testConfig";
  *   - `countriesLoading`: Boolean indicating whether the request is in progress.
  *   - `countriesError`: An error encountered during fetching.
  */
+
 export function useFetchCountriesByRegion(region: string) {
   const cache = useRef<Map<string, Country[]>>(new Map());
   const [initialCountries, setInitialCountries] = useState<Country[]>([]);
@@ -39,23 +40,22 @@ export function useFetchCountriesByRegion(region: string) {
       controller.abort();
       setError("Fetch request aborted due to timeout.");
       setLoading(false);
-    }, appConfig.fetchTimeout);
+    }, apiConfig.fetchTimeout);
 
     async function fetchCountries() {
       try {
         if (testConfig.countryError) throw new Error("Test error");
         
-        const response = await fetch(`${appConfig.subregionUrl}${region}`, {
+        const response = await fetch(`${apiConfig.subregion.url}${region}?fields=${apiConfig.subregion.fields.join(',')}`, {
           signal: controller.signal,
         });
-        console.log('fetched');
         
         clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error("Failed to fetch countries.");
         }
-        const data = await response.json();
+        const data: CountryApiResponse[] = await response.json();
       
         const mappedCountries: Country[] = mapCountries(data);
       

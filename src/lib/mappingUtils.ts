@@ -1,4 +1,4 @@
-import { Country, CountryApiResponse } from "@/types/country";
+import { Country, CountryApiResponse, RegionsApiResponse } from "@/types/country";
 
 /**
  * Maps API response data into a structured array of Country objects.
@@ -16,7 +16,11 @@ export function mapCountries(data: CountryApiResponse[]): Country[] {
     name: country.name.common,
     population: country.population,
     capital: country.capital ? country.capital[0] : "N/A",
-    flag: country.flags.png || country.flags.svg,
+    flags: {
+      png: country.flags.png,
+      svg: country.flags.svg,
+      alt: country.flags.alt,
+    },
     id: country.cca3,
   }));
 }
@@ -32,7 +36,7 @@ export function mapCountries(data: CountryApiResponse[]): Country[] {
  * @returns {Map<string, string[]>} A Map where keys are regions and values are arrays of subregions.
  */
 
-export function buildRegionMap(countryData: CountryApiResponse[]): Map<string, string[]> {
+export function buildRegionMap(countryData: RegionsApiResponse[]): Map<string, string[]> {
   const regionMap = new Map<string, string[]>();
 
   for (const country of countryData) {

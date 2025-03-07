@@ -4,10 +4,19 @@ export type AppConfig = {
     initialSortBy: SortOption;
     initialSortOrder: SortOrder;
   };
-  fetchTimeout: number,
-  subregionUrl: string,
-  allCountriesUrl: string,
 }
+
+export type ApiConfig = {
+  subregion: {
+    url: string;
+    fields: string[];
+  };
+  all: {
+    url: string;
+    fields: string[];
+  };
+  fetchTimeout: number;
+};
 
 export type Region = string;
 

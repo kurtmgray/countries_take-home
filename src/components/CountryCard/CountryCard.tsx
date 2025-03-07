@@ -16,8 +16,8 @@ export const CountryCard = memo(({ country }: { country: Country }) => {
   return (
     <div className={styles.card}>
       <img
-        src={country.flag}
-        alt={`${country.name} flag`}
+        src={country.flags.svg || country.flags.png} // add placeholder, edge case
+        alt={country.flags.alt}
         className={styles.image}
       />
       <h2 className={styles.name}>{country.name}</h2>
