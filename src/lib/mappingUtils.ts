@@ -37,19 +37,18 @@ export function mapCountries(data: CountryApiResponse[]): Country[] {
  */
 
 export function buildRegionMap(countryData: RegionsApiResponse[]): Map<string, string[]> {
-  const regionMap = new Map<string, string[]>();
+  const regionMap = new Map<string, Set<string>>();
 
   for (const country of countryData) {
-    if (!country.subregion) continue
+    if (!country.subregion) continue;
 
+    // faster lookup on set than array.inclues()
     if (!regionMap.has(country.region)) {
-      regionMap.set(country.region, []);
+      regionMap.set(country.region, new Set());
     }
 
-    const subregions = regionMap.get(country.region)!;
-    if (!subregions.includes(country.subregion)) {
-      subregions.push(country.subregion);
-    }
+    regionMap.get(country.region)!.add(country.subregion);
   }
-  return regionMap;
+
+  return new Map([...regionMap].map(([region, subregions]) => [region, [...subregions]]));
 }

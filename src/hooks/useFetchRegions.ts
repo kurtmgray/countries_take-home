@@ -24,7 +24,7 @@ const CACHE_TTL = 24 * 60 * 60 * 1000 // 24h
  */
 
 export function useFetchRegions() {
-  const [regions, setRegions] = useState<Map<string, string[]>>(()=> {
+  const [regions, setRegions] = useState<Map<string, string[]>>(()=> {   // set regions from cache or set to empty map
     
     const cachedData = localStorage.getItem(CACHE_KEY);
     const cachedExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
@@ -45,8 +45,8 @@ export function useFetchRegions() {
       
       console.log("Regions not in cache, fetching fresh data");
 
-      // extract to API service
-      const controller = new AbortController();
+    // TODO: extract to API service - fetchWithTimeout()
+    const controller = new AbortController();
       const timeoutId = setTimeout(() => {
         controller.abort();
         setRegionsError("Fetch request aborted due to timeout.");
@@ -71,6 +71,7 @@ export function useFetchRegions() {
 
           const regionsMap: Map<string,string[]> = buildRegionMap(data);
 
+          // set cache after fetch
           localStorage.setItem(CACHE_KEY, JSON.stringify([...regionsMap]));
           localStorage.setItem(CACHE_EXPIRY_KEY, (Date.now() + CACHE_TTL).toString());
 
@@ -83,7 +84,7 @@ export function useFetchRegions() {
         }
       }
       fetchRegions();
-    }, []);
+    }, [regions.size]);
   
     return { regions, regionsLoading, regionsError };
   }

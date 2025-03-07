@@ -9,7 +9,7 @@ import { testConfig } from "@/config/testConfig";
  *
  * This hook fetches country data from the REST Countries API,
  * applies a timeout mechanism, and returns the fetched countries,
- * loading state, and any potential errors.
+ * loading state, and any errors.
  *
  * @param {string} region - The selected region for which countries should be fetched.
  * @returns {Object} 
@@ -19,13 +19,16 @@ import { testConfig } from "@/config/testConfig";
  */
 
 export function useFetchCountriesByRegion(region: string) {
-  const cache = useRef<Map<string, Country[]>>(new Map());
-  const [initialCountries, setInitialCountries] = useState<Country[]>([]);
+  const [initialCountries, setInitialCountries] = useState<Country[]>([]);  // stores region countries fetched one region at a time
   const [countriesLoading, setLoading] = useState<boolean>(true);
   const [countriesError, setError] = useState<string | null>(null);
+  
+  const cache = useRef<Map<string, Country[]>>(new Map()); // caches all fetched regions
 
   useEffect(() => {
     setLoading(true);
+    
+    // check if region's countries are cached
     if (cache.current.has(region)) {
       console.log('cache before fetch', cache.current);
       console.log(`Using cached data for ${region}`);
@@ -34,7 +37,7 @@ export function useFetchCountriesByRegion(region: string) {
       return;
     }
     
-    // extract to API service
+    // TODO: extract to API service - fetchWithTimeout()
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       controller.abort();
@@ -57,6 +60,7 @@ export function useFetchCountriesByRegion(region: string) {
         }
         const data: CountryApiResponse[] = await response.json();
       
+        // mapping data from API to app format
         const mappedCountries: Country[] = mapCountries(data);
       
         cache.current.set(region, mappedCountries);
