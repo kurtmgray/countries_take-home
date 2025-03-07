@@ -40,7 +40,6 @@ export function useFetchCountriesByRegion(region: string) {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          console.log(response)
           throw new Error("Failed to fetch countries.");
         }
         const data = await response.json();
@@ -49,7 +48,6 @@ export function useFetchCountriesByRegion(region: string) {
         
         setInitialCountries(mappedCountries);
       } catch (err) {
-        console.log(err)
         setError((err as Error).message);
       } finally {
         setLoading(false);

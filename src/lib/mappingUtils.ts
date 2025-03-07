@@ -33,7 +33,6 @@ export function mapCountries(data: CountryApiResponse[]): Country[] {
  */
 
 export function buildRegionMap(countryData: CountryApiResponse[]): Map<string, string[]> {
-  console.log(countryData)
   const regionMap = new Map<string, string[]>();
 
   for (const country of countryData) {
@@ -48,6 +47,5 @@ export function buildRegionMap(countryData: CountryApiResponse[]): Map<string, s
       subregions.push(country.subregion);
     }
   }
-  console.log(regionMap)
   return regionMap;
 }
