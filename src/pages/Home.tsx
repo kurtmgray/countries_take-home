@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <div className={styles.homeContainer}>
-      <h1 className={styles.heading}>{region} Countries</h1>
+      <h1 className={styles.heading}>Countries of {region}</h1>
       <div className={styles.searchContainer}>
         <RegionSelect
           regions={regions}
