@@ -22,22 +22,24 @@ const CACHE_TTL = 24 * 60 * 60 * 1000 // 24h
  */
 
 export function useFetchRegions() {
-  const [regions, setRegions] = useState<Map<string, string[]>>(new Map());
+  const [regions, setRegions] = useState<Map<string, string[]>>(()=> {
+    
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
+    
+    if (cachedData && cachedExpiry && Date.now() < Number(cachedExpiry)) {
+      console.log("Using cached regions data");
+      return new Map(JSON.parse(cachedData));
+    }
+    return new Map();
+  });
+
   const [regionsLoading, setRegionsLoading] = useState<boolean>(true);
   const [regionsError, setRegionsError] = useState<string | null>(null);
 
     useEffect(() => {
+      if (regions.size > 0) return;
       
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      const cachedExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
-
-      if (cachedData && cachedExpiry && Date.now() < Number(cachedExpiry)) {
-        console.log("Using cached regions data");
-        setRegions(new Map(JSON.parse(cachedData)));
-        setRegionsLoading(false);
-        return;
-      }
-
       console.log("Regions not in cache, fetching fresh data");
 
       // extract to API service

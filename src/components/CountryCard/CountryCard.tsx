@@ -1,7 +1,18 @@
+import { memo } from 'react';
 import { Country } from '@/types/country';
 import styles from './CountryCard.module.css';
 
-export function CountryCard({ country }: { country: Country }) {
+/**
+ * CountryCard Component - Displays country information in a card.
+ *
+ * This component renders a country's flag, name, capital, and population in a card format.
+ *
+ * @param {Country} country - The country object containing name, population, capital, and flag URL.
+ *
+ * @returns {JSX.Element} A styled card displaying the country's details.
+ */
+
+export const CountryCard = memo(({ country }: { country: Country }) => {
   return (
     <div className={styles.card}>
       <img
@@ -14,4 +25,4 @@ export function CountryCard({ country }: { country: Country }) {
       <p>Population: {country.population.toLocaleString()}</p>
     </div>
   );
-}
+});

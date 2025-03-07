@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SortControls } from '@/components/SortControls/SortControls';
 import { RegionSelect } from '@/components/RegionSelect/RegionSelect';
@@ -27,8 +27,6 @@ export default function Home() {
   const { initialCountries, countriesLoading, countriesError } =
     useFetchCountriesByRegion(region);
   const { regions, regionsLoading, regionsError } = useFetchRegions();
-  const [sortedCountries, setSortedCountries] =
-    useState<Country[]>(initialCountries);
   const [searchQuery, setSearchQuery] = useState('');
 
   const [sortBy, setSortBy] = useState<SortOption>(
@@ -38,22 +36,18 @@ export default function Home() {
     appConfig.sorting.initialSortOrder
   );
 
-  useEffect(() => {
-    if (!initialCountries.length) return;
+  const sortedCountries: Country[] = useMemo(() => {
+    if (!initialCountries.length) return [];
 
     let updatedCountries = initialCountries;
 
-    // apply search query
     if (searchQuery) {
       updatedCountries = initialCountries.filter((country) =>
         country.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // apply sort
-    updatedCountries = sortCountries(updatedCountries, sortBy, sortOrder);
-
-    setSortedCountries(updatedCountries);
+    return sortCountries(updatedCountries, sortBy, sortOrder);
   }, [initialCountries, sortBy, sortOrder, searchQuery]);
 
   const handleRegionChange = (newRegion: Region) => {
