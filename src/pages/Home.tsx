@@ -55,20 +55,20 @@ export default function Home() {
     <div className={styles.homeContainer}>
       <h1 className={styles.heading}>{region} Countries</h1>
       <div className={styles.searchContainer}>
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <RegionSelect
           regions={regions}
           regionsLoading={regionsLoading}
           selectedRegion={region}
           setRegion={handleRegionChange}
         />
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <SortControls
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+        />
       </div>
-      <SortControls
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-      />
       {countriesLoading && (
         <p className={styles.loading}>Loading {region} countries...</p>
       )}

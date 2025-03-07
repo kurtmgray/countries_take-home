@@ -4,8 +4,8 @@
   .sortControls {
     @apply flex 
       flex-wrap 
-      justify-center 
-      gap-2 
-      mb-4;
+      justify-center
+      items-center 
+      gap-2;
   }
 }
