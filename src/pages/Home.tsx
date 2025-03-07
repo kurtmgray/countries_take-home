@@ -78,7 +78,7 @@ export default function Home() {
         {regionsError && <ErrorAlert type="Regions" error={regionsError} />}
       </div>
 
-      {!countriesError && !regionsError && (
+      {!countriesError && !regionsError && !countriesLoading && (
         <div className={styles.grid}>
           {filteredCountries.map((country) => (
             <CountryCard key={country.id} country={country} />

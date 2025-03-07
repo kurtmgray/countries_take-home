@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Country } from "@/types/country";
 import { mapCountries } from "@/lib/mappingUtils";
 import { appConfig } from "@/config/appConfig";
@@ -18,11 +18,20 @@ import { testConfig } from "@/config/testConfig";
  *   - `countriesError`: An error encountered during fetching.
  */
 export function useFetchCountriesByRegion(region: string) {
+  const cache = useRef<Map<string, Country[]>>(new Map());
   const [initialCountries, setInitialCountries] = useState<Country[]>([]);
   const [countriesLoading, setLoading] = useState<boolean>(true);
   const [countriesError, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
+    if (cache.current.has(region)) {
+      console.log('cache before fetch', cache.current);
+      console.log(`Using cached data for ${region}`);
+      setInitialCountries(cache.current.get(region)!);
+      setLoading(false);
+      return;
+    }
     
     // extract to API service
     const controller = new AbortController();
@@ -39,6 +48,7 @@ export function useFetchCountriesByRegion(region: string) {
         const response = await fetch(`${appConfig.subregionUrl}${region}`, {
           signal: controller.signal,
         });
+        console.log('fetched');
         
         clearTimeout(timeoutId);
 
@@ -46,9 +56,12 @@ export function useFetchCountriesByRegion(region: string) {
           throw new Error("Failed to fetch countries.");
         }
         const data = await response.json();
-        
+      
         const mappedCountries: Country[] = mapCountries(data);
-        
+      
+        cache.current.set(region, mappedCountries);
+        console.log('cache after fetch', cache.current);
+
         setInitialCountries(mappedCountries);
       } catch (err) {
         setError((err as Error).message);
