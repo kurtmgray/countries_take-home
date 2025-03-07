@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+@layer components {
+  .regionSelect {
+    @apply 
+      m1-auto;
+  }
+
+  .regionSelectTrigger {
+    @apply w-180px;
+  }
+}

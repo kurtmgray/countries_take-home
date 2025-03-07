@@ -1,0 +1,1 @@
+// Centralized API service for fetching with timeout

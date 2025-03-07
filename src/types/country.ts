@@ -3,7 +3,7 @@ export type Country = {
   population: number;
   capital?: string;
   flag: string;
-  cca3: string; // ID 
+  id: string; 
 };
 
 export type CountryApiResponse = {
@@ -12,4 +12,6 @@ export type CountryApiResponse = {
   capital?: string[];
   flags: { png: string; svg: string };
   cca3: string;
+  region: string;
+  subregion: string;
 };

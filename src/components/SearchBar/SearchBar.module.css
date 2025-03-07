@@ -2,9 +2,10 @@
 
 @layer components {
   .searchBar {
-    @apply mb-4 
-      flex 
-      justify-center;
+    @apply
+      flex-grow
+      max-w-md 
+      mx-auto;
   }
   .input {
     @apply p-2 

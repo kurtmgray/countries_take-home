@@ -1,49 +1,100 @@
+import { useEffect, useState } from 'react';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SortControls } from '@/components/SortControls/SortControls';
 import { RegionSelect } from '@/components/RegionSelect/RegionSelect';
 import { CountryCard } from '@/components/CountryCard/CountryCard';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { useFetchCountries } from '@/hooks/useFetchCountries';
+import { ErrorAlert } from '@/components/ErrorAlert/ErrorAlert';
+import { useFetchCountriesByRegion } from '@/hooks/useFetchCountriesByRegion';
+import { useFetchRegions } from '@/hooks/useFetchRegions';
+import { Region, SortOption, SortOrder } from '@/types/config';
+import { Country } from '@/types/country';
+import { appConfig } from '@/config/appConfig';
+import { sortCountries } from '@/lib/sortingUtils';
 import styles from './Home.module.css';
-import { useState } from 'react';
 
+/**
+ * Home Component - Displays the list of countries based on the selected region.
+ *
+ * This component integrates search, sorting, and region selection functionality,
+ * using custom hooks to fetch country and region data. Users can filter countries
+ * by name, sort them by name or population, and select different regions to update the displayed data.
+ *
+ * @returns {JSX.Element} The Home component.
+ *
+ */
 export default function Home() {
-  const [region, setRegion] = useState<string>('Northern Europe');
-  const { countries, filteredCountries, setFilteredCountries, loading, error } =
-    useFetchCountries(region);
+  const [region, setRegion] = useState<Region>(appConfig.defaultRegion);
+  const { initialCountries, countriesLoading, countriesError } =
+    useFetchCountriesByRegion(region);
+  const { regions, regionsLoading, regionsError } = useFetchRegions();
+  const [sortedCountries, setSortedCountries] =
+    useState<Country[]>(initialCountries);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleRegionChange = (newRegion: string) => {
-    console.log('Region changed to:', newRegion); // Debugging
+  const [sortBy, setSortBy] = useState<SortOption>(
+    appConfig.sorting.initialSortBy
+  );
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    appConfig.sorting.initialSortOrder
+  );
+
+  useEffect(() => {
+    if (!initialCountries.length) return;
+
+    let updatedCountries = initialCountries;
+
+    // apply search query
+    if (searchQuery) {
+      updatedCountries = initialCountries.filter((country) =>
+        country.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // apply sort
+    updatedCountries = sortCountries(updatedCountries, sortBy, sortOrder);
+
+    setSortedCountries(updatedCountries);
+  }, [initialCountries, sortBy, sortOrder, searchQuery]);
+
+  const handleRegionChange = (newRegion: Region) => {
     setRegion(newRegion);
   };
 
   return (
     <div className={styles.homeContainer}>
       <h1 className={styles.heading}>{region} Countries</h1>
-
-      <div>
-        <SearchBar
-          countries={countries}
-          setFilteredCountries={setFilteredCountries}
+      <div className={styles.searchContainer}>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <RegionSelect
+          regions={regions}
+          regionsLoading={regionsLoading}
+          selectedRegion={region}
+          setRegion={handleRegionChange}
         />
-        <RegionSelect selectedRegion={region} setRegion={handleRegionChange} />
       </div>
       <SortControls
-        filteredCountries={filteredCountries}
-        setFilteredCountries={setFilteredCountries}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
       />
-      {loading && <p className={styles.loading}>Loading...</p>}
-      {error && (
-        <Alert variant="destructive" className={styles.error}>
-          <AlertTitle>Error:</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+      {countriesLoading && (
+        <p className={styles.loading}>Loading {region} countries...</p>
       )}
-      <div className={styles.grid}>
-        {filteredCountries.map((country) => (
-          <CountryCard key={country.cca3} country={country} />
-        ))}
+      <div className={styles.errorsContainer}>
+        {countriesError && (
+          <ErrorAlert type="Countries" error={countriesError} />
+        )}
+        {regionsError && <ErrorAlert type="Regions" error={regionsError} />}
       </div>
+
+      {!countriesError && !regionsError && (
+        <div className={styles.grid}>
+          {sortedCountries.map((country) => (
+            <CountryCard key={country.id} country={country} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
