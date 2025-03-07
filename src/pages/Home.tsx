@@ -70,8 +70,8 @@ export default function Home() {
         />
       </div>
       {countriesLoading && (
-        // <p className={styles.loading}>Loading {region} countries...</p>
-        <Skeleton region={region} />
+        <p className={styles.loading}>Loading {region} countries...</p>
+        // <Skeleton region={region} />
       )}
       <div className={styles.errorsContainer}>
         {countriesError && (
@@ -91,11 +91,11 @@ export default function Home() {
   );
 }
 
-export function Skeleton({ region }: { region: string }) {
-  return (
-    <div className="w-full h-24 bg-gray-300 animate-pulse rounded-lg">
-      {' '}
-      Loading {region} countries...{' '}
-    </div>
-  );
-}
+// export function Skeleton({ region }: { region: string }) {
+//   return (
+//     <div className="w-full h-24 bg-gray-300 animate-pulse rounded-lg">
+//       {' '}
+//       Loading {region} countries...{' '}
+//     </div>
+//   );
+// }
