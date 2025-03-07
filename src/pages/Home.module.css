@@ -36,6 +36,7 @@
   .searchContainer {
     @apply pt-2
       pb-4
+      gap-2
       flex 
       justify-between 
       items-center
