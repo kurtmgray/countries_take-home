@@ -4,6 +4,7 @@ import { SortControls } from '@/components/SortControls/SortControls';
 import { RegionSelect } from '@/components/RegionSelect/RegionSelect';
 import { CountryCard } from '@/components/CountryCard/CountryCard';
 import { ErrorAlert } from '@/components/ErrorAlert/ErrorAlert';
+import { SkeletonLoader } from '@/components/SkeletonLoader/SkeletonLoader';
 import { useFetchCountriesByRegion } from '@/hooks/useFetchCountriesByRegion';
 import { useFetchRegions } from '@/hooks/useFetchRegions';
 import { Region, SortOption, SortOrder } from '@/types/config';
@@ -69,10 +70,7 @@ export default function Home() {
           setSortOrder={setSortOrder}
         />
       </div>
-      {countriesLoading && (
-        <p className={styles.loading}>Loading {region} countries...</p>
-        // <Skeleton region={region} />
-      )}
+      {countriesLoading && <SkeletonLoader />}
       <div className={styles.errorsContainer}>
         {countriesError && (
           <ErrorAlert type="Countries" error={countriesError} />
@@ -90,12 +88,3 @@ export default function Home() {
     </div>
   );
 }
-
-// export function Skeleton({ region }: { region: string }) {
-//   return (
-//     <div className="w-full h-24 bg-gray-300 animate-pulse rounded-lg">
-//       {' '}
-//       Loading {region} countries...{' '}
-//     </div>
-//   );
-// }
